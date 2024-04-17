@@ -78,6 +78,31 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-1
 
+1. Menurut saya untuk kasus projek BambangShop, penggunaan `struct` sudah cukup karena pada projek ini skalanya masih relatif
+kecil dan tidak terlalu banyak dependencies terhadap untuk setiap fitur pada projek ini. Namun, menurut saya akan lebih baik menggunaan
+`trait` untuk mendefinisikan observer karena terdapat beberapa kelebihan jika kita menggunakan trait seperti:
+    - Kode kita menjadi lebih loose coupling
+    - Kode kita lebih mudah diextend
+    - Memungkinkan untuk membuat banyak jenis observer tanpa harus membuat model yang berbeda untuk setiap jenis observer
+
+2. Penggunaan `Vec` sebenarnya bisa saja tetapi akan membuat kode kita menjadi lebih kompleks dan tidak efisien. Jika kita menggunakan `Vec` maka kita perlu membuat `Vec` yang menyimpan subscriber dan `Vec` yang menyimpan url. Dengan menggunakan `DashMap` kita bisa memetakan subscriber dan url sehingga program menjadi lebih efisien
+
+3. Menurut saya untuk projek ini kita harus menggunakan `DashMap` karena pada projek ini kita menggunakan multi threading sehingga variabel `SUBSCRIBER` akan diakses oleh thread yang berbeda secara bersamaan. Untuk penggunaan pattern Singleton, berdasarkan pemahaman saya pattern Singleton bertujuan untuk memastikan hanya terdapat 1 instance untuk sebuah objek selama aplikasi berjalan. Menurut saya kita tetap dapat menggunakan DashMap dan pattern Singleton secara bersamaan karena keduanya tidak berkaitan.
+
 #### Reflection Publisher-2
 
+1. Berdasarkan pemaham saya, service dan repository harus dipisahkan karena beberapa alasan yaitu separation of concern, kemudahan untuk melakukan scalling, meenghindari kode yang terlalu bloated, decoupling, dan memudahkan saat melakukan testing.
+
+2. Jika kita hanya menggunakan Model maka setiap model akan berisi kode yang mengelola penyimpanan yang berhubungan dengan model tersebut dan model tersebut juga akan berisi business logic yang berhubungan dengan model tersebut. Jika terdapat beberapa model yang harus saling berinteraksi maka hal ini dilakukan dengan melakukan aggregation atau composition. Hal ini akan meningkatkan kompleksitas kode kita dan akan membuat kode kita sulit untuk didebug
+
+3. Menurut saya Postman sangat membantu ketika kita ingin mengetes apakah API yang kita buat sudah mengembalikan data sesuai yang kita inginkan atau tidak. Fitur yang saya sukai dari Postman adalah fitur collection yang membuat pengetesan API kita lebih efisien dan fitur yang dapat menyesuaikan method HTTP yang kita gunakan saat melakukan testing.
+
+
 #### Reflection Publisher-3
+ 
+1. Pada tutorial ini kita menggunakan variasi Push. Hal ini terlihat dari log di bawah ini yaitu ketika publisher mengirim notifikasi kepada subscriber ketika terjadi perubahan
+![Log info](image.png)
+
+2. Jika kita menggunakan variasi pull, kelebihannya adalah publisher tidak perlu menyiman instance subscriber karena subscriber sendiri yang akan mengambil data notifikasi tersebut. Kekurangan variasi pull adalah kemungkinan terjadinya misinformasi jika subscriber tidak mengambil data notifikasi
+
+3. Jika kita tidak menggunakan multi threading maka pengiriman notifikasi akan dilakukan secara sequential, hal ini akan berakibat fatal jika jumlah subscribernya sudah terlalu banyak dan subscriber yang berada di urutan terakhir bisa saja menerima notifikasi dengan selisih waktu yang besar dengan subscriber yang berada di urutan pertama
